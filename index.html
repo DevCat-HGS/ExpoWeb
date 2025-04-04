@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Servidores Linux</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --text-color: #333;
+            --code-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --bg-color: #ffffff;
+            --section-bg: #ffffff;
+            --section-shadow: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #61dafb;
+            --secondary-color: #4fa3d1;
+            --text-color: #e4e4e4;
+            --code-bg: #2d2d2d;
+            --border-color: #404040;
+            --bg-color: #1a1a1a;
+            --section-bg: #242424;
+            --section-shadow: rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .theme-switch svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .theme-switch:hover {
+            opacity: 0.9;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem;
+            font-size: 2rem;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            color: var(--secondary-color);
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .command-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .command-block code {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--section-bg);
+            box-shadow: 0 2px 4px var(--section-shadow);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-switch" onclick="toggleTheme()" aria-label="Cambiar tema">
+        <i class="bi bi-sun-fill sun-icon"></i>
+        <i class="bi bi-moon-fill moon-icon" style="display: none;"></i>
+    </button>
+    <h1>Administración del Firewall en Servidores Linux</h1>
+
+    <div class="section">
+        <h2>1. Administrador de Paquetes de Software</h2>
+        <h3>Concepto</h3>
+        <p>Un administrador de paquetes es una herramienta que facilita la instalación, actualización y eliminación de software en sistemas operativos basados en Linux. Estos administradores permiten gestionar dependencias y garantizar que las aplicaciones funcionen correctamente sin conflictos.</p>
+
+        <h3>Funciones principales de los administradores de paquetes</h3>
+        <ol>
+            <li><strong>Instalación de software:</strong> Permite instalar programas y sus dependencias de forma automática.</li>
+            <li><strong>Actualización de software:</strong> Facilita la actualización de programas instalados a sus versiones más recientes.</li>
+            <li><strong>Eliminación de software:</strong> Desinstala programas sin afectar el resto del sistema.</li>
+            <li><strong>Gestión de dependencias:</strong> Garantiza que todos los paquetes necesarios para ejecutar un programa estén correctamente instalados.</li>
+            <li><strong>Búsqueda de paquetes:</strong> Permite encontrar paquetes disponibles en los repositorios oficiales.</li>
+        </ol>
+
+        <h3>Tipos de Administradores de Paquetes</h3>
+        <div class="command-block">
+            <h4>APT (Advanced Packaging Tool)</h4>
+            <p>Utilizado en distribuciones como Debian y Ubuntu. Destaca por su manejo avanzado de dependencias y amplia documentación.</p>
+            <code>apt-get install nombre_paquete</code>
+            <code>apt-get update && apt-get upgrade</code>
+            <code>apt-get remove nombre_paquete</code>
+
+            <h4>YUM y DNF</h4>
+            <p>Utilizados en RHEL, CentOS y Fedora. DNF es la evolución moderna de YUM.</p>
+            <code>dnf install nombre_paquete</code>
+            <code>dnf update</code>
+            <code>dnf remove nombre_paquete</code>
+
+            <h4>Pacman y Otros</h4>
+            <p>Pacman (Arch Linux) es conocido por su velocidad. También existen alternativas modernas como Snap y Flatpak para paquetes universales.</p>
+        </div>
+
+        <h3>Tipos de Administradores de Paquetes</h3>
+        <h4>a) Administradores Basados en Deb</h4>
+        <div class="command-block">
+            <p><strong>APT (Advanced Packaging Tool)</strong>: Utilizado en distribuciones como Debian y Ubuntu.</p>
+            <p>Ventajas:</p>
+            <ul>
+                <li>Manejo avanzado de dependencias.</li>
+                <li>Amplia documentación y soporte de la comunidad.</li>
+                <li>Repositorios públicos y privados disponibles.</li>
+            </ul>
+            <p>Comandos principales:</p>
+            <code>apt-get install nombre_paquete</code>
+            <code>apt-get update && apt-get upgrade</code>
+            <code>apt-get remove nombre_paquete</code>
+        </div>
+
+        <div class="command-block">
+            <p><strong>DPKG (Debian Package Manager)</strong>: Permite la gestión directa de paquetes .deb.</p>
+            <p>Comandos principales:</p>
+            <code>dpkg -i paquete.deb</code>
+            <code>dpkg -r nombre_paquete</code>
+            <code>dpkg -l</code>
+        </div>
+
+        <h4>b) Administradores Basados en RPM</h4>
+        <div class="command-block">
+            <p><strong>YUM (Yellowdog Updater, Modified)</strong>: Utilizado en RHEL y CentOS.</p>
+            <code>yum install nombre_paquete</code>
+            <code>yum update</code>
+            <code>yum remove nombre_paquete</code>
+        </div>
+
+        <div class="command-block">
+            <p><strong>DNF (Dandified YUM)</strong>: Evolución de YUM, utilizado en Fedora y CentOS 8.</p>
+            <code>dnf install nombre_paquete</code>
+            <code>dnf remove nombre_paquete</code>
+            <code>dnf update</code>
+        </div>
+
+        <h4>c) Otros Administradores</h4>
+        <ul>
+            <li><strong>Zypper</strong>: Utilizado en openSUSE.</li>
+            <li><strong>Pacman</strong>: Utilizado en Arch Linux, conocido por su velocidad y simplicidad.</li>
+            <li><strong>Snap y Flatpak</strong>: Proporcionan paquetes universales para diferentes distribuciones y permiten el aislamiento de aplicaciones.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>2. Administración de Servicios</h2>
+        <h3>Concepto</h3>
+        <p>La administración de servicios en Linux permite iniciar, detener, reiniciar y monitorear procesos del sistema. Los servicios pueden ser procesos críticos del sistema, como servidores web, bases de datos o gestores de red.</p>
+
+        <h3>Herramientas Principales</h3>
+        <div class="command-block">
+            <h4>Systemd (Sistema Moderno)</h4>
+            <p>Systemd es el sistema de inicio y administración de servicios más utilizado en distribuciones Linux modernas. Ofrece características avanzadas como:</p>
+            <ul>
+                <li>Inicio paralelo de servicios</li>
+                <li>Dependencias automáticas</li>
+                <li>Monitoreo de estado en tiempo real</li>
+                <li>Gestión de logs integrada</li>
+            </ul>
+            <p><strong>Comandos Esenciales:</strong></p>
+            <code>systemctl start apache2    # Iniciar servidor web Apache</code>
+            <code>systemctl status mysql    # Ver estado de MySQL</code>
+            <code>systemctl enable nginx    # Habilitar Nginx en el arranque</code>
+            <code>journalctl -u ssh        # Ver logs del servicio SSH</code>
+        </div>
+
+        <h4>System V Init (Sistema Clásico)</h4>
+        <div class="command-block">
+            <p>Aunque legacy, aún se usa en algunos sistemas. Comandos básicos:</p>
+            <code>service nombre_servicio start</code>
+            <code>service nombre_servicio stop</code>
+            <code>service nombre_servicio restart</code>
+        </div>
+
+        <h4>b) Systemd (Usado en la Mayoría de Distribuciones Modernas)</h4>
+        <div class="command-block">
+            <code>systemctl start nombre_servicio</code>
+            <code>systemctl stop nombre_servicio</code>
+            <code>systemctl restart nombre_servicio</code>
+            <code>systemctl status nombre_servicio</code>
+            <code>systemctl enable nombre_servicio</code>
+            <code>systemctl disable nombre_servicio</code>
+        </div>
+
+        <h4>c) Herramientas Adicionales</h4>
+        <ul>
+            <li><code>chkconfig</code> (Usado en sistemas basados en RHEL para gestionar servicios en arranque)</li>
+            <li><code>rc-service</code> (Usado en sistemas basados en OpenRC como Alpine Linux)</li>
+            <li><code>supervisorctl</code> (Permite gestionar procesos y servicios personalizados)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>3. Administración del Firewall</h2>
+        <h3>Concepto</h3>
+        <p>Un firewall es una herramienta de seguridad que regula el tráfico de red basado en reglas predefinidas. Su función principal es permitir o bloquear el tráfico según direcciones IP, puertos y protocolos.</p>
+
+        <div class="command-block">
+            <h3>Configuraciones Comunes de Seguridad</h3>
+            <p><strong>1. Protección Básica del Servidor</strong></p>
+            <code>ufw allow 22/tcp         # Permitir SSH</code>
+            <code>ufw allow 80,443/tcp    # Permitir Web</code>
+            <code>ufw enable              # Activar firewall</code>
+
+            <p><strong>2. Configuración de Zonas en FirewallD</strong></p>
+            <code>firewall-cmd --zone=public --add-service=http</code>
+            <code>firewall-cmd --zone=internal --add-service=mysql</code>
+
+            <p><strong>3. Reglas Avanzadas con IPTables</strong></p>
+            <code>iptables -A INPUT -p tcp -s 192.168.1.0/24 --dport 3306 -j ACCEPT    # Permitir MySQL local</code>
+            <code>iptables -A INPUT -p tcp --dport 80 -m limit --limit 25/minute -j ACCEPT    # Rate limiting</code>
+        </div>
+
+        <h3>Principales Herramientas de Firewall en Linux</h3>
+        <h4>a) Iptables</h4>
+        <div class="command-block">
+            <p>Filtra paquetes según reglas definidas.</p>
+            <p>Ejemplo de reglas:</p>
+            <code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code>
+            <code>iptables -A INPUT -p tcp --dport 80 -j ACCEPT</code>
+            <code>iptables -A INPUT -j DROP</code>
+            <code>iptables -L -v -n</code>
+        </div>
+
+        <h4>b) Firewalld (Usado en Distribuciones Modernas como RHEL, CentOS y Fedora)</h4>
+        <div class="command-block">
+            <p>Comandos básicos:</p>
+            <code>firewall-cmd --permanent --add-port=80/tcp</code>
+            <code>firewall-cmd --reload</code>
+            <code>firewall-cmd --list-all</code>
+            <code>firewall-cmd --add-service=http --permanent</code>
+        </div>
+
+        <h4>c) UFW (Uncomplicated Firewall, Usado en Ubuntu y Debian)</h4>
+        <div class="command-block">
+            <p>Comandos principales:</p>
+            <code>ufw enable</code>
+            <code>ufw disable</code>
+            <code>ufw allow 22/tcp</code>
+            <code>ufw status</code>
+        </div>
+
+        <h3>Recomendaciones de Seguridad</h3>
+        <ol>
+            <li><strong>Usar reglas específicas</strong>: Evitar abrir todos los puertos sin necesidad.</li>
+            <li><strong>Habilitar solo servicios necesarios</strong>: Reducir la superficie de ataque.</li>
+            <li><strong>Monitoreo y registros</strong>: Revisar logs con <code>journalctl -xe</code> o <code>cat /var/log/firewalld.log</code>.</li>
+            <li><strong>Realizar pruebas</strong>: Validar reglas con <code>netcat</code> o herramientas de escaneo como <code>nmap</code>.</li>
+            <li><strong>Configurar reglas de denegación por defecto</strong>: Es recomendable configurar <code>iptables -P INPUT DROP</code> para bloquear todo el tráfico no autorizado.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h3>Configuración Avanzada de Firewall</h3>
+        <h4>Ejemplos de Configuraciones Específicas</h4>
+        <div class="command-block">
+            <p><strong>1. Protección contra Ataques DDoS</strong></p>
+            <code>iptables -A INPUT -p tcp --syn -m limit --limit 1/s --limit-burst 3 -j ACCEPT</code>
+            <code>iptables -A INPUT -p tcp --syn -j DROP</code>
+            
+            <p><strong>2. Configuración de Port Knocking</strong></p>
+            <code>iptables -A INPUT -p tcp --dport 7000 -m recent --set --name AUTH1</code>
+            <code>iptables -A INPUT -p tcp --dport 8000 -m recent --rcheck --name AUTH1 --seconds 30 -j ACCEPT</code>
+            
+            <p><strong>3. Logging de Intentos de Acceso</strong></p>
+            <code>iptables -A INPUT -p tcp --dport 22 -m limit --limit 5/min -j LOG --log-prefix "SSH Attempt: "</code>
+        </div>
+
+        <h4>Resolución de Problemas Comunes</h4>
+        <div class="troubleshooting-block">
+            <p><strong>Problema 1: Pérdida de Acceso SSH</strong></p>
+            <ul>
+                <li>Verificar reglas actuales: <code>iptables -L -n -v</code></li>
+                <li>Restaurar acceso: <code>iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT</code></li>
+            </ul>
+
+            <p><strong>Problema 2: Conflictos entre Reglas</strong></p>
+            <ul>
+                <li>Listar reglas con números: <code>iptables -L --line-numbers</code></li>
+                <li>Eliminar regla específica: <code>iptables -D INPUT [número]</code></li>
+            </ul>
+
+            <p><strong>Problema 3: Servicios Web Bloqueados</strong></p>
+            <ul>
+                <li>Verificar puertos abiertos: <code>netstat -tulpn</code></li>
+                <li>Permitir tráfico HTTP/HTTPS: <code>iptables -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT</code></li>
+            </ul>
+        </div>
+
+        <h4>Buenas Prácticas de Seguridad</h4>
+        <ul>
+            <li>Implementar rate limiting para servicios críticos</li>
+            <li>Mantener un registro de cambios en las reglas del firewall</li>
+            <li>Realizar auditorías periódicas de seguridad</li>
+            <li>Utilizar herramientas de monitoreo como Fail2ban</li>
+            <li>Mantener copias de seguridad de las configuraciones</li>
+        </ul>
+    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section logo-section">
+                <img src="assets/sena-logo.svg" alt="Logo SENA" class="sena-logo" draggable="false">
+            </div>
+            <div class="footer-section info-section">
+                <h4 class="footer-title">Grupo 2 - ADSO</h4>
+                <p class="footer-subtitle">Análisis y Desarrollo de Software</p>
+                <ul class="team-members">
+                    <li class="team-member">Harol</li>
+                    <li class="team-member">Victor</li>
+                    <li class="team-member">Kairon</li>
+                    <li class="team-member">Juan Andrés</li>
+                </ul>
+            </div>
+            <div class="footer-section social-section">
+                <a href="https://github.com/DevCat-HGS" target="_blank" rel="noopener noreferrer" class="github-link">
+                    <i class="bi bi-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            background-color: var(--section-bg);
+            border-top: 1px solid var(--border-color);
+            user-select: none;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        .footer-section {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-section .sena-logo {
+            width: 100px;
+            height: 100px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .info-section .footer-title {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-section .footer-subtitle {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .team-members {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+        }
+
+        .team-member {
+            padding: 0.3rem 0;
+            color: var(--text-color);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-member:hover {
+            opacity: 1;
+        }
+
+        .social-section .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background-color: var(--code-bg);
+            transition: all 0.3s ease;
+        }
+
+        .social-section .github-link:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-section {
+                width: 100%;
+            }
+
+            .social-section .github-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</body>
+</html>
+
+<script>
+// Protección contra inspección de código
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+
+function toggleTheme() {
+    const body = document.documentElement;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    if (newTheme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
+}
+
+// Cargar tema guardado
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+// Actualizar ícono inicial
+window.addEventListener('DOMContentLoaded', () => {
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    if (savedTheme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    }
+});
+</script>
